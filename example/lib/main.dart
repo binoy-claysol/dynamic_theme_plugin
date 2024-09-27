@@ -1,16 +1,37 @@
 // main.dart
 
 import 'package:dynamic_theme_flutter/dynamic_theme_flutter.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'firebase_options.dart';
+import 'movie_list_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // Create an instance of DynamicThemeManager with the initial URL
-  final dynamicThemeManager = DynamicThemeManager('https://66f1209841537919154fa383.mockapi.io/api/v1/getThemeJson');
+  await _initializeFirebase();
+  final dynamicThemeManager = DynamicThemeManager('Sharanya');
 
   runApp(MyApp(dynamicThemeManager: dynamicThemeManager));
 }
+
+Future<void> _initializeFirebase() async {
+  try {
+    // Check if Firebase is already initialized
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      print('Firebase initialized successfully');
+    } else {
+      print('Firebase is already initialized.');
+    }
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   final DynamicThemeManager dynamicThemeManager;
@@ -25,41 +46,9 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Dynamic Theme Example',
           theme: dynamicThemeManager.currentTheme ?? ThemeData.light(),
-          home: MyHomePage(dynamicThemeManager: dynamicThemeManager),
+          home: MovieListScreen(themeManager: dynamicThemeManager),
         );
       },
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  final DynamicThemeManager dynamicThemeManager;
-
-  const MyHomePage({Key? key, required this.dynamicThemeManager}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dynamic Theme Example'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Press the button to change the theme dynamically!',
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                // Change theme by providing a new URL
-                await dynamicThemeManager.changeTheme('https://66f1209841537919154fa383.mockapi.io/api/v1/getAnotherTheme');
-              },
-              child: const Text('Change Theme'),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
