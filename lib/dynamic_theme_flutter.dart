@@ -3,79 +3,101 @@ library dynamic_theme_flutter;
 // theme_manager.dart
 
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:json_theme_plus/json_theme_plus.dart';
 
 class ThemeManager {
   ThemeData? _themeData;
 
-  // Method to initialize the theme by fetching from a URL
-  Future<void> initializeTheme(String url) async {
-    final themeJson = await _fetchThemeFromUrl(url);
-    _themeData = ThemeDecoder.decodeThemeData(((themeJson as List)[0]));
+  // Method to initialize the theme by fetching from Firestore
+  Future<void> initializeTheme(String documentId) async {
+    _themeData = await _fetchThemeFromFirestore(documentId);
   }
 
   // Method to get the theme data
   ThemeData? get themeData => _themeData;
 
-  // Internal method to fetch theme data from the provided URL
-  Future<Map<String, dynamic>> _fetchThemeFromUrl(String url) async {
+  // Internal method to fetch theme data from Firestore
+  Future<ThemeData?> _fetchThemeFromFirestore(String documentId) async {
     try {
-      final response = await http.get(Uri.parse(url));
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('themes')
+          .doc(documentId)
+          .get();
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.first; // Taking the first item as the theme
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        return ThemeDecoder.decodeThemeData(data);
       } else {
-        throw Exception('Failed to load theme data');
+        throw Exception('Theme data not found in Firestore');
       }
     } catch (e) {
-      throw Exception('Error fetching theme from URL: $e');
+      throw Exception('Error fetching theme from Firestore: $e');
     }
   }
 }
 
-// This class allows changing the theme dynamically at runtime
+// This class allows changing the theme dynamically at runtime and listening for real-time updates
 class DynamicThemeManager extends ChangeNotifier {
   ThemeData? _currentTheme;
+  final String documentId;
 
-  DynamicThemeManager(String initialUrl) {
-    _fetchAndSetTheme(initialUrl);
+  // Constructor initializes the theme and sets up a Firestore listener
+  DynamicThemeManager(this.documentId) {
+    _initializeThemeWithListener(documentId);
   }
 
   // Getter for the current theme
   ThemeData? get currentTheme => _currentTheme;
 
-  // Method to fetch theme from a new URL and update it
-  Future<void> changeTheme(String url) async {
+  // Initialize the theme and set up a real-time listener for updates from Firestore
+  Future<void> _initializeThemeWithListener(String documentId) async {
+    // Fetch the initial theme
+    await _fetchAndSetTheme(documentId);
+
+    // Set up Firestore listener for real-time updates
+    FirebaseFirestore.instance
+        .collection('themes')
+        .doc(documentId)
+        .snapshots()
+        .listen((DocumentSnapshot snapshot) {
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        _currentTheme = ThemeDecoder.decodeThemeData(data);
+        notifyListeners(); // Notify listeners to update the theme
+      } else {
+        print('No theme data found for real-time updates.');
+      }
+    });
+  }
+
+  // Method to manually fetch theme from Firestore and update it
+  Future<void> _fetchAndSetTheme(String documentId) async {
     try {
-      final themeJson = await _fetchThemeFromUrl(url);
-      _currentTheme = ThemeDecoder.decodeThemeData(themeJson);
+      _currentTheme = await _fetchThemeFromFirestore(documentId);
       notifyListeners(); // Notify listeners to update the theme
     } catch (e) {
-      throw Exception('Error changing theme: $e');
+      print('Error changing theme: $e');
     }
   }
 
-  // Internal method to fetch theme JSON from the provided URL
-  Future<Map<String, dynamic>> _fetchThemeFromUrl(String url) async {
+  // Internal method to fetch theme JSON from Firestore
+  Future<ThemeData?> _fetchThemeFromFirestore(String documentId) async {
     try {
-      final response = await http.get(Uri.parse(url));
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('themes')
+          .doc(documentId)
+          .get();
 
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        return data.first; // Taking the first item as the theme
+      if (snapshot.exists) {
+        final data = snapshot.data() as Map<String, dynamic>;
+        return ThemeDecoder.decodeThemeData(data);
       } else {
-        throw Exception('Failed to load theme data');
+        throw Exception('Theme data not found in Firestore');
       }
     } catch (e) {
-      throw Exception('Error fetching theme from URL: $e');
+      throw Exception('Error fetching theme from Firestore: $e');
     }
-  }
-
-  // Private method to initialize the theme
-  Future<void> _fetchAndSetTheme(String url) async {
-    await changeTheme(url);
   }
 }
