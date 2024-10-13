@@ -24,6 +24,7 @@ dependencies:
   cloud_firestore: ^5.4.2
   dio: ^5.7.0
   flutter_screenutil: ^5.9.3
+  webview_flutter: 
 
 
 dev_dependencies:

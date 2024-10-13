@@ -3,6 +3,7 @@ import 'package:example/src/core/constants/movie_service.dart';
 import 'package:example/src/core/model/omdb_response.dart';
 import 'package:example/src/ui/cast_page.dart';
 import 'package:example/src/ui/episode_page.dart';
+import 'package:example/src/ui/liquid_refresh/news_list.dart';
 import 'package:flutter/material.dart';
 import 'package:example/src/selected_items.dart';
 
@@ -68,6 +69,12 @@ class _MovieListScreenState extends State<MovieListScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => SeasonsPage(themeManager: widget.themeManager)),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage(themeManager: widget.themeManager)),
         );
         break;
     }
@@ -229,6 +236,11 @@ class _MovieListScreenState extends State<MovieListScreen> {
               BottomNavigationBarItem(
                 icon: const Icon(Icons.movie_edit),
                 label: 'Episodes',
+                backgroundColor: widget.themeManager.currentTheme?.primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.list),
+                label: 'list',
                 backgroundColor: widget.themeManager.currentTheme?.primaryColor,
               ),
             ],

@@ -65,38 +65,92 @@ mixin _$FinalSpaceController on FinalSpaceControllerBase, Store {
     _$locationsAtom.reportRead();
     return super.locations;
   }
+
+  @override
+  set locations(List<LocationModel> value) {
+    _$locationsAtom.reportWrite(value, super.locations, () {
+      super.locations = value;
+    });
+  }
+
+  late final _$selectedIndexAtom =
+      Atom(name: 'FinalSpaceControllerBase.selectedIndex', context: context);
+
+  @override
+  int get selectedIndex {
+    _$selectedIndexAtom.reportRead();
+    return super.selectedIndex;
+  }
+
+  @override
+  set selectedIndex(int value) {
+    _$selectedIndexAtom.reportWrite(value, super.selectedIndex, () {
+      super.selectedIndex = value;
+    });
+  }
+
   late final _$newsListAtom =
       Atom(name: 'FinalSpaceControllerBase.newsList', context: context);
 
-  @override
-  ObservableList<News> get newsList {
-    _$newsListAtom.reportRead();
-    return super.newsList;
-  }
-
-  @override
-  set newsList(ObservableList<News> value) {
-    _$newsListAtom.reportWrite(value, super.newsList, () {
-      super.newsList = value;
-    });
-  }
 
   late final _$isLoadingAtom =
       Atom(name: 'FinalSpaceControllerBase.isLoading', context: context);
 
   @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
   }
 
   @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
   }
 
+  late final _$getNewsAsyncAction =
+      AsyncAction('FinalSpaceControllerBase.getNews', context: context);
 
   @override
+  Future<void> getNews(String location) {
+    return _$getNewsAsyncAction.run(() => super.getNews(location));
+  }
+
+  late final _$getCharactersAsyncAction =
+      AsyncAction('FinalSpaceControllerBase.getCharacters', context: context);
+
+  @override
+  Future<List<CharactersModel>> getCharacters() {
+    return _$getCharactersAsyncAction.run(() => super.getCharacters());
+  }
+
+  late final _$getEpisodeAsyncAction =
+      AsyncAction('FinalSpaceControllerBase.getEpisode', context: context);
+
+  @override
+  Future<List<EpisodeModel>> getEpisode() {
+    return _$getEpisodeAsyncAction.run(() => super.getEpisode());
+  }
+
+  late final _$getLocationAsyncAction =
+      AsyncAction('FinalSpaceControllerBase.getLocation', context: context);
+
+  @override
+  Future<List<LocationModel>> getLocation() {
+    return _$getLocationAsyncAction.run(() => super.getLocation());
   }
 
   @override
   String toString() {
     return '''
+userData: ${userData},
+episodes: ${episodes},
+characters: ${characters},
+locations: ${locations},
+selectedIndex: ${selectedIndex},
+newsList: ${newsList},
+isLoading: ${isLoading}
     ''';
   }
 }
