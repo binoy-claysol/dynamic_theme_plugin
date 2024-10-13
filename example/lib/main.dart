@@ -5,13 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
-import 'movie_list_screen.dart';
-
+import 'package:example/src/movie_list_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Create an instance of DynamicThemeManager with the initial URL
   await _initializeFirebase();
-  final dynamicThemeManager = DynamicThemeManager('Sharanya');
+  final dynamicThemeManager = DynamicThemeManager('Pooja');
 
   runApp(MyApp(dynamicThemeManager: dynamicThemeManager));
 }
