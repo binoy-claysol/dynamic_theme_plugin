@@ -1,6 +1,8 @@
 import 'package:dynamic_theme_flutter/dynamic_theme_flutter.dart';
 import 'package:example/src/core/constants/movie_service.dart';
 import 'package:example/src/core/model/omdb_response.dart';
+import 'package:example/src/ui/cast_page.dart';
+import 'package:example/src/ui/episode_page.dart';
 import 'package:flutter/material.dart';
 import 'package:example/src/selected_items.dart';
 
@@ -44,12 +46,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const CastPage()),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
           MaterialPageRoute(
             builder: (context) => SelectedItems(
               selectedMovies: selectedMovies,
@@ -62,10 +58,16 @@ class _MovieListScreenState extends State<MovieListScreen> {
           ),
         );
         break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CastPage(themeManager: widget.themeManager)),
+        );
+        break;
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ExampleApp()),
+          MaterialPageRoute(builder: (context) => SeasonsPage(themeManager: widget.themeManager)),
         );
         break;
     }
@@ -202,11 +204,6 @@ class _MovieListScreenState extends State<MovieListScreen> {
                 backgroundColor: widget.themeManager.currentTheme?.primaryColor,
               ),
               BottomNavigationBarItem(
-                icon: const Icon(Icons.auto_stories_sharp),
-                label: 'Story',
-                backgroundColor: widget.themeManager.currentTheme?.primaryColor,
-              ),
-              BottomNavigationBarItem(
                 icon: Stack(
                   children: [
                     const Icon(Icons.favorite),
@@ -225,8 +222,13 @@ class _MovieListScreenState extends State<MovieListScreen> {
                 backgroundColor: widget.themeManager.currentTheme?.primaryColor,
               ),
               BottomNavigationBarItem(
-                icon: const Icon(Icons.settings),
-                label: 'Settings',
+                icon: const Icon(Icons.auto_stories_sharp),
+                label: 'Characters',
+                backgroundColor: widget.themeManager.currentTheme?.primaryColor,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.movie_edit),
+                label: 'Episodes',
                 backgroundColor: widget.themeManager.currentTheme?.primaryColor,
               ),
             ],
@@ -237,50 +239,8 @@ class _MovieListScreenState extends State<MovieListScreen> {
   }
 }
 
-class CastPage extends StatelessWidget {
-  const CastPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cast Page'),
-      ),
-      body: const Center(
-        child: Text('This is the Cast page'),
-      ),
-    );
-  }
-}
 
-class SeasonsPage extends StatelessWidget {
-  const SeasonsPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Seasons Page'),
-      ),
-      body: const Center(
-        child: Text('This is the Seasons page'),
-      ),
-    );
-  }
-}
 
-class ExampleApp extends StatelessWidget {
-  const ExampleApp({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Example App Page'),
-      ),
-      body: const Center(
-        child: Text('This is the Example App page'),
-      ),
-    );
-  }
-}
