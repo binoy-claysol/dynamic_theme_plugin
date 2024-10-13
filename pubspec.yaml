@@ -11,13 +11,20 @@ dependencies:
   flutter:
     sdk: flutter
   mobx: ^2.3.3+2
+  sticky_headers: "^0.3.0"
   flutter_mobx: ^2.2.1+1
   injectable: ^2.4.4
   json_theme_plus: ^6.6.1
+  json_annotation: ^4.9.0
+  easy_localization: ^3.0.7
+  animations: ^2.0.11
   http: ^1.2.2
   firebase_auth: ^5.3.0
   firebase_core: ^3.5.0
   cloud_firestore: ^5.4.2
+  dio: ^5.7.0
+  flutter_screenutil: ^5.9.3
+
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +32,8 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   mobx_codegen: ^2.6.1
   build_runner: ^2.4.12
+  json_serializable: ^6.8.0
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

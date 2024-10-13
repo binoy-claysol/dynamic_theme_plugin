@@ -10,7 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Create an instance of DynamicThemeManager with the initial URL
   await _initializeFirebase();
-  final dynamicThemeManager = DynamicThemeManager('Sharanya');
+  final dynamicThemeManager = DynamicThemeManager('Pooja');
 
   runApp(MyApp(dynamicThemeManager: dynamicThemeManager));
 }
