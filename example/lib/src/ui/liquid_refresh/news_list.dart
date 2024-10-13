@@ -191,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text("news list"),
-        backgroundColor: Colors.lightBlue, // Change the background color here
+        backgroundColor:widget.themeManager.currentTheme!.primaryColor, // Change the background color here
         actions: [
           // Toggle button for theme switching
           Switch(
