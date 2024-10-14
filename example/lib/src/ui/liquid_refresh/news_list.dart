@@ -7,24 +7,6 @@ import 'package:example/src/controllers/controller.dart';
 import 'liquid.pull.refresh.dart';
 import 'news.web.view.dart';
 
-// void main() => runApp(const MyApp());
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//       ),
-//       home: const MyHomePage(title: 'Liquid Pull To Refresh'),
-//     );
-//   }
-// }
-
 class MyHomePage extends StatefulWidget {
   final DynamicThemeManager themeManager;
   const MyHomePage({super.key, required this.themeManager});
@@ -114,7 +96,12 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _deleteItem(int index) {
-    _controller.newsList.removeAt(index);
+    _controller.newsList.removeAt(index); // Delete the item
+    ScaffoldMessenger.of(context).showSnackBar( // Show a snackbar message
+      const SnackBar(
+        content: Text('Deleted successfully'),
+      ),
+    );
   }
 
   // Method to add a new item
@@ -190,8 +177,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("news list"),
-        backgroundColor:widget.themeManager.currentTheme!.primaryColor, // Change the background color here
+        title: Text("News List"),
+        backgroundColor: widget.themeManager.currentTheme!.primaryColor, // Change the background color here
         actions: [
           // Toggle button for theme switching
           Switch(
@@ -301,32 +288,29 @@ class _MyHomePageState extends State<MyHomePage> {
                                         color: Colors.lightBlue[300], // Background color
                                       ),
                                       child: Text(
-                                        '${index + 1}', // Display index number
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
+                                        '${index + 1}', // Display the index + 1
+                                        style: const TextStyle(color: Colors.white),
                                       ),
                                     ),
                                     title: Text(
                                       newsItems.title,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: _isDarkMode ? Colors.white : Colors.black,
+                                        color: _isDarkMode ? Colors.white : Colors.black, // Text color
                                       ),
                                     ),
                                     subtitle: Text(
                                       newsItems.description,
                                       style: TextStyle(
-                                        color: _isDarkMode ? Colors.white70 : Colors.black54,
+                                        color: _isDarkMode ? Colors.white70 : Colors.black54, // Subtitle color
                                       ),
                                     ),
                                     trailing: IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      color: _isDarkMode ? Colors.red : null, // Change delete button color based on dark mode
-                                      onPressed: () {
-                                        _deleteItem(index); // Call delete method on tap
-                                      },
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: _isDarkMode ? Colors.red : Colors.red, // Delete icon color changes to red in both themes
+                                      ),
+                                      onPressed: () => _deleteItem(index), // Call delete method
                                     ),
                                   ),
                                 ),
@@ -344,8 +328,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddItemDialog, // Show dialog to add new item
-        tooltip: 'Add Item',
+        onPressed: _showAddItemDialog,
         child: const Icon(Icons.add),
       ),
     );
